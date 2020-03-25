@@ -7,8 +7,8 @@ Pong tutorial
 	  |   |_ pong.js
 	  |_ css
 	  |   |_ pong.css
-      |
-      |_ _ _ pong.html
+	  |
+	  |_ _ _ pong.html
 ```
 
    b) Notice what the pong.html page requires to be an html page. This is the same for any new webpage.
