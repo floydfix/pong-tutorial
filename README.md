@@ -50,10 +50,8 @@ Pong tutorial
    For scale we are using 10, which means that later when we want to draw a simple square we can just draw 1 by 1 and it will show up as 10 by 10 on our canvas.
    Then we just fill the entire canvas with black #000000
 
-	EXTRA)
-		colors can be represented in HEX code by doing
-		# + (Red value from 00 - FF in HEX) + (Green value from 00 - FF in HEX) + (Blue value from 00 - FF in HEX)
-		So... Red is #FF0000, Green is #00FF00, Blue is #0000FF, Black is #000000, What is white?
+   EXTRA) colors can be represented in HEX code by doing # + (Red value from 00 - FF in HEX) + (Green value from 00 - FF in HEX) + (Blue value from 00 - FF in HEX)
+   So... Red is #FF0000, Green is #00FF00, Blue is #0000FF, Black is #000000, What is white?
 
 ```
 const canvas = document.getElementById("gameCanvas");
