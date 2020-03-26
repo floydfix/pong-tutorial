@@ -134,3 +134,69 @@ context.fillRect(3, height / 2 - 5, 1, 10);
 context.fillStyle = '#0000FF';
 context.fillRect(width - 3, height / 2 - 5, 1, 10);
 ```
+
+5) a) Now we need some inputs to move the paddles. Add this to the pong.js. Then, when you refresh the page, you should be able to see the keyCode of any key you press in the console.
+```
+document.addEventListener("keydown", event => {
+	console.log(event.keyCode);
+});
+```
+
+   b) Choose an up and down key for each paddle to use (4 keys), mark them down as comments in your code like below.
+```
+// 38 = up arrow, 40 = down arrow
+```
+
+   c) Change the eventListener code to use these values
+```
+document.addEventListener("keydown", event => {
+	console.log(event.keyCode);
+	switch (event.keyCode) {
+		// right up
+		case 38:
+		break;
+
+		// right down
+		case 40:
+		break;
+
+		// left up
+		case 81:
+		break;
+
+		// left down
+		case 65:
+		break;
+	}
+});
+```
+
+   d) Now, we need something to change when our key presses happen. So add some lets for us to use.
+```
+let leftPaddleX = 3;
+let leftPaddleY = height / 2 - 5;
+let rightPaddleX = width - 3;
+let rightPaddleY = height / 2 - 5;
+
+```
+   
+   e) And change the draw code to use the new variables.
+```
+// ball
+context.fillStyle = '#FF0000';
+context.fillRect(width / 2, height / 2, 1, 1);
+
+// left paddle
+context.fillStyle = '#00FF00';
+context.fillRect(leftPaddleX, leftPaddleY, 1, 10);
+
+// right paddle
+context.fillStyle = '#0000FF';
+context.fillRect(rightPaddleX, rightPaddleY, 1, 10);
+```
+
+   f) AND lets change the wait time to something lower like 100.
+```
+if (elapsedTime > 100) {
+...
+```
