@@ -64,3 +64,45 @@ context.scale(scale, scale);
 context.fillStyle = '#000000';
 context.fillRect(0, 0, canvas.height, canvas.width);
 ```
+
+3) a) Create the main game loop. To start our game timer we call requestAnimationFrame with a function that we want called when this happens. requestAnimationFrame passes in the current time which we can use to find out how much time has elapsed since we were last here. Notice we don't have a function called draw yet.
+```
+function loop(time) {
+	draw();
+	requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+```
+
+   b) The way that we have written the loop we would get a call to draw every frame of animation (60 a second) so we should slow it down a bit. Lets add some code that will count milliseconds and only call draw every 500 milliseconds (half of a second);
+```
+let elapsedTime = 0;
+let lastTime = 0;
+function loop(time) {
+	if (lastTime == 0) {
+		lastTime = time;
+	}
+	elapsedTime += time - lastTime;
+	if (elapsedTime > 500) {
+		draw();
+	}
+	lastTime = time;
+	requestAnimationFrame(loop);
+}
+```
+
+   c) Create the function draw(). This is the function we are going to use to draw the screen as it currently looks. If you run the code now, nothing happens, so lets have some fun.
+```
+function draw() {
+	
+}
+```
+
+   EXTRA) Try to figure out what this is going to do before you run it
+```
+function draw() {
+	context.fillStyle = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	context.fillRect(Math.floor((Math.random() * 90)), Math.floor((Math.random() * 60)), 1, 1);	
+}
+```
