@@ -231,9 +231,11 @@ if (elapsedTime > 100) {
 
 # STEP SIX
 
-	a) The first step may seem like a lot of code, but what we're going to do now is called a refactor.
-	We are going to introduce creating an object in javascript by passing values into a function.
-	Add the code below into your code up before the variables leftPlayerX, leftPlayerY etc...
+	a) This step may seem like a lot of code for no reason, but what we're going to do 
+	now is called a refactor. First, We are going to introduce creating an object in 
+	javascript by passing values into a function.
+	
+	Add the code below into your code before the variables leftPlayerX, leftPlayerY etc...
 ```javascript
 var Vec = function(x,y) {
 	this.x = x;
