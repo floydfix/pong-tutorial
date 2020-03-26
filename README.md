@@ -105,3 +105,32 @@ function draw() {
 	context.fillRect(Math.floor((Math.random() * 90)), Math.floor((Math.random() * 60)), 1, 1);	
 }
 ```
+
+4) a) Lets make some constants for us to use
+```
+const width = canvas.width / scale;
+const height = canvas.height / scale;
+```
+
+   b) Now we can draw all of the items for the game board. First, lets move the code that draws the game board black, into the draw method.
+
+```
+function draw() {
+	context.fillStyle = '#000000';
+	context.fillRect(0, 0, width, height);
+```
+   
+   c) Then we can draw the items for the game
+```
+// ball
+context.fillStyle = '#FF0000';
+context.fillRect(width / 2, height / 2, 1, 1);
+
+// left paddle
+context.fillStyle = '#00FF00';
+context.fillRect(3, height / 2 - 5, 1, 10);
+
+// right paddle
+context.fillStyle = '#0000FF';
+context.fillRect(width - 3, height / 2 - 5, 1, 10);
+```
