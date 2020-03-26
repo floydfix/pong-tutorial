@@ -432,7 +432,8 @@ if (ball.x <= 0 || ball.x >= width || ball.y >= height || ball.y <= 0) {
 # Step 8
 
 	Now that we have the ball bouncing off of walls, we can add bouncing off of the paddles.
-	Add the variables and the four functions below.
+	Add the variables and the four functions below. This code will help us tell if the ball
+	goes past or hits the paddles.
 ```javascript
 let leftPlayerScore = 0;
 let rightPlayerScore = 0;
@@ -456,7 +457,7 @@ function rightScore() {
 }
 ```
 
-	And update this part of the draw() function
+	And update this part of the draw() function to add the new functions we just added
 ```javascript
 if (ball.x <= 0 || ball.x >= width || ball.y >= height || ball.y <= 0 || leftHit() || rightHit()) {			
 	if (ball.x <= 0 || ball.x >= width || leftHit() || rightHit())
@@ -466,7 +467,8 @@ if (ball.x <= 0 || ball.x >= width || ball.y >= height || ball.y <= 0 || leftHit
 }
 ```
 
-	Add this directly above the last part of code INSIDE the draw() function
+	Add this directly above the last part of code INSIDE the draw() function. This will display
+	the score and stops the game if someone scores
 ```javascript
 context.fillStyle = '#FFF';
 context.font = '3px serif';
@@ -491,12 +493,26 @@ if (gameStarted && (leftScore() || rightScore())) {
 }
 ```
 
-	At the bottom of your javascript file replace the line that says
+	Add this to your switch statement inside the keydown listener
+```javascript
+	case 32:
+	if (!gameStarted)
+		startGame();
+	break;
+
+	case 82:
+	if (!gameStarted)
+		startGame(0);
+	break;
+```
+
+	Then at the bottom of your javascript file replace the line that says...
 ```javascript
 requestAnimationFrame(loop);
 ```
 
-	With this
+	With this. All this does is reset all of the variables for the ball and paddles, and create a
+	scenario where pressing the space button or r will actually start the game.
 ```javascript
 function startGame(lvl = level) {
 	if (lvl == 0) {
