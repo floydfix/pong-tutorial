@@ -173,9 +173,7 @@ document.addEventListener("keydown", event => {
 
    d) Now, we need something to change when our key presses happen. So add some lets for us to use.
 ```
-let leftPaddleX = 3;
 let leftPaddleY = height / 2 - 5;
-let rightPaddleX = width - 3;
 let rightPaddleY = height / 2 - 5;
 
 ```
@@ -188,14 +186,41 @@ context.fillRect(width / 2, height / 2, 1, 1);
 
 // left paddle
 context.fillStyle = '#00FF00';
-context.fillRect(leftPaddleX, leftPaddleY, 1, 10);
+context.fillRect(3, leftPaddleY, 1, 10);
 
 // right paddle
 context.fillStyle = '#0000FF';
-context.fillRect(rightPaddleX, rightPaddleY, 1, 10);
+context.fillRect(width - 3, rightPaddleY, 1, 10);
 ```
 
-   f) AND lets change the wait time to something lower like 100.
+   f) Change the eventListener code again to use these values
+```
+document.addEventListener("keydown", event => {
+	console.log(event.keyCode);
+	switch (event.keyCode) {
+		// right up
+		case 38:
+		rightPaddleY -= 1;
+		break;
+
+		// right down
+		case 40:
+		rightPaddleY += 1;
+		break;
+
+		// left up
+		case 81:
+		leftPaddleY -= 1;
+		break;
+
+		// left down
+		case 65:
+		leftPaddleY += 1;
+		break;
+	}
+});
+```
+   g) AND lets change the wait time to something lower like 100.
 ```
 if (elapsedTime > 100) {
 ...

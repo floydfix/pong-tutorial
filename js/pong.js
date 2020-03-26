@@ -3,9 +3,7 @@ const context = canvas.getContext("2d");
 const scale = 10;
 const width = canvas.width / scale;
 const height = canvas.height / scale;
-let leftPaddleX = 3;
 let leftPaddleY = height / 2 - 5;
-let rightPaddleX = width - 3;
 let rightPaddleY = height / 2 - 5;
 
 context.scale(scale, scale);
@@ -20,11 +18,11 @@ function draw() {
 
 	// left paddle
 	context.fillStyle = '#00FF00';
-	context.fillRect(leftPaddleX, leftPaddleY, 1, 10);
+	context.fillRect(3, leftPaddleY, 1, 10);
 
 	// right paddle
 	context.fillStyle = '#0000FF';
-	context.fillRect(rightPaddleX, rightPaddleY, 1, 10);
+	context.fillRect(width - 3, rightPaddleY, 1, 10);
 }
 
 let elapsedTime = 0;
