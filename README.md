@@ -302,3 +302,129 @@ switch (event.keyCode) {
 	break;
 }
 ```
+
+# Step 7
+	
+	One more quick refactor, so that both players can move thier players at the same time.
+	Add these two variables to pong.js
+```javascript
+let playerLeftKey = false;
+let playerRightKey = false;
+```
+
+	Refactor the key down event listener to the following
+```javascript
+document.addEventListener("keydown", event => {
+	console.log(event.keyCode);
+	switch (event.keyCode) {
+		// right up 'arrow up'
+		case 38:
+		playerRightKey = "up";
+		break;
+
+		// right down 'arrow down'
+		case 40:
+		playerRightKey = "down";
+		break;
+
+		// left up 'w'
+		case 87:
+		playerLeftKey = "up";
+		break;
+
+		// left down 's'
+		case 83:
+		playerLeftKey = "down";
+		break;
+	}
+});
+```
+	And add a keyup event listener
+```javascript
+document.addEventListener("keyup", event => {
+	console.log(event.keyCode);
+	switch (event.keyCode) {
+		// right up 'arrow up'
+		case 38:
+		playerRightKey = false;
+		break;
+
+		// right down 'arrow down'
+		case 40:
+		playerRightKey = false;
+		break;
+
+		// left up 'w'
+		case 87:
+		playerLeftKey = false;
+		break;
+
+		// left down 's'
+		case 83:
+		playerLeftKey = false;
+		break;
+	}
+});
+```
+
+	Then we need to replace the "moving" code. In the draw function, before you draw the paddles,
+	put in the following code to update the position of the paddles
+```javascript
+if (playerRightKey != false) {
+	if (playerRightKey == "up") {
+		rightPaddle.y -= 1;
+	}
+	if (playerRightKey == "down") {
+		rightPaddle.y += 1;
+	}
+	// make sure it stays on the screen
+	if (rightPaddle.y < 0) {
+		rightPaddle.y = 0;
+	}
+	// make sure it stays on the screen
+	if (rightPaddle.y > height - 10) {
+		rightPaddle.y = height - 10;
+	}
+}
+
+if (playerLeftKey != false) {
+	if (playerLeftKey == "up") {
+		leftPaddle.y -= 1;
+	}
+	if (playerLeftKey == "down") {
+		leftPaddle.y += 1;
+	}
+	// make sure it stays on the screen
+	if (leftPaddle.y < 0) {
+		leftPaddle.y = 0;
+	}
+	// make sure it stays on the screen
+	if (leftPaddle.y > height - 10) {
+		leftPaddle.y = height - 10;
+	}
+}
+```
+
+	Time to make the ball move! Are you excited?! add these variables
+```javascript
+let ballSpeed = .3;
+let ballDirection = Math.random() * 360;
+let ballVelocityX = ballSpeed;
+let ballVelocityY = ballSpeed;
+```
+	
+	In the draw function before drawing the ball, add this code to determine how the ball should move.
+	These are pretty cool math functions that you should look into if you're interested.
+	SIN() pronounced sign, and COS() pronounced co-sign. And when the ball hits the wall, it should 
+	reverse its velocity in the direction it is hitting the wall.
+```javascript
+ball.x += Math.cos(ballDirection * Math.PI / 180) * ballVelocityX;
+ball.y += Math.sin(ballDirection * Math.PI / 180) * ballVelocityY;
+
+if (ball.x <= 0 || ball.x >= width || ball.y >= height || ball.y <= 0) {			
+	if (ball.x <= 0 || ball.x >= width)
+		ballVelocityX = -ballVelocityX;
+	if (ball.y <= 0 || ball.y >= height)
+		ballVelocityY = -ballVelocityY;
+}
+```
