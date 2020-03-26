@@ -428,3 +428,105 @@ if (ball.x <= 0 || ball.x >= width || ball.y >= height || ball.y <= 0) {
 		ballVelocityY = -ballVelocityY;
 }
 ```
+
+# Step 8
+
+	Now that we have the ball bouncing off of walls, we can add bouncing off of the paddles.
+	Add the variables and the four functions below.
+```javascript
+let leftPlayerScore = 0;
+let rightPlayerScore = 0;
+let gameStarted = false;
+let level = -1;
+
+function leftHit() {
+	return ball.x <= leftPaddle.x && ball.y >= leftPaddle.y && ball.y <= leftPaddle.y + 10;
+}
+
+function rightHit() {
+	return ball.x >= rightPaddle.x && ball.y >= rightPaddle.y && ball.y <= rightPaddle.y + 10;
+}
+
+function leftScore() {
+	return ball.x < leftPaddle.x - 1;
+}
+
+function rightScore() {
+	return ball.x > rightPaddle.x + 1;
+}
+```
+
+	And update this part of the draw() function
+```javascript
+if (ball.x <= 0 || ball.x >= width || ball.y >= height || ball.y <= 0 || leftHit() || rightHit()) {			
+	if (ball.x <= 0 || ball.x >= width || leftHit() || rightHit())
+		ballVelocityX = -ballVelocityX;
+	if (ball.y <= 0 || ball.y >= height)
+		ballVelocityY = -ballVelocityY;
+}
+```
+
+	Add this directly above the last part of code INSIDE the draw() function
+```javascript
+context.fillStyle = '#FFF';
+context.font = '3px serif';
+context.fillText(leftPlayerScore + " | " + rightPlayerScore, width / 2, 4, 140);
+
+if (!gameStarted)
+	context.fillText("Press Space to start next level, R to restart", 20, 7, 140);
+
+ball.x += Math.cos(ballDirection * Math.PI / 180) * ballVelocityX;
+ball.y += Math.sin(ballDirection * Math.PI / 180) * ballVelocityY;
+
+if (gameStarted && (leftScore() || rightScore())) {
+	if (leftScore())
+		rightPlayerScore += 1;
+	if (rightScore())
+		leftPlayerScore += 1;
+
+	level += 1;
+	ballSpeed -= ballSpeed *.20;
+	gameOver();
+	return false;
+}
+```
+
+	At the bottom of your javascript file replace the line that says
+```javascript
+requestAnimationFrame(loop);
+```
+
+	With this
+```javascript
+function startGame(lvl = level) {
+	if (lvl == 0) {
+		leftPlayerScore = 0;
+		rightPlayerScore = 0;
+	}
+
+	ballSpeed = .3 + (.05 * lvl);
+	ballVelocityX = ballSpeed;
+	ballVelocityY = ballSpeed;
+
+	gameStarted = true;
+	requestAnimationFrame(loop);
+}
+
+function gameOver() {
+	ball = new Vec(width / 2, height / 2);
+	ballDirection = Math.random() * 360;
+	leftPaddle = new Vec(3, height / 2 - 5);
+	rightPaddle = new Vec(width - 3,height / 2 - 5);
+	playerLeftKey = false;
+	playerRightKey = false;
+	
+	level += 1;
+	gameStarted = false;
+	requestAnimationFrame(loop);
+}
+
+gameOver();
+```
+
+
+
