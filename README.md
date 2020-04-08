@@ -229,7 +229,7 @@ if (elapsedTime > 100) {
 ...
 ```
 
-# STEP SIX
+# Step 6
 
 	a) This step may seem like a lot of code for no reason, but what we're going to do 
 	now is called a refactor. First, We are going to introduce creating an object in 
@@ -544,5 +544,237 @@ function gameOver() {
 gameOver();
 ```
 
+# Step 9
+	For the next part, we need to create some variables to store some information that we are
+	using multiple times in our application, and will help it become easier adaptable in the future.
+	To start, get rid of these old variables
+```javascript
+	let ball = new Vec(width / 2, height / 2);
+	let leftPaddle = new Vec(3, height / 2 - 5);
+	let rightPaddle = new Vec(width - 3,height / 2 - 5);
+	let ballSpeed = .3;
+```
+```javascript
+	let paddleWidth = 10;
+	let paddleHeight = 100;
+	let paddleEdgePadding = 30;
+	let ball;
+	let leftPaddle;
+	let rightPaddle;
+	let ballSpeed = 30;
+```
+
+	Now, we need ot get rid of anything that has to do with scale. In the past we were using scale
+	to make items on our canvas look bigger than they should, but now we want everything to be
+	pixel perfect.
+
+	Start by removing
+```javascript
+	const scale = 10;
+
+	...
+
+	context.scale(scale, scale);
+```
+	
+	Then, change the next two constants to look like they do below
+```javascript
+	const width = canvas.width;
+	const height = canvas.height;
+```
+	In the hit() and score() functions, you should be able to replace the numbers 1 and 10 with
+	the new variables you made paddleWidth and paddleHeight
+
+```javascript
+	function leftHit() {
+		return ball.x <= leftPaddle.x && ball.y >= leftPaddle.y && ball.y <= leftPaddle.y + paddleHeight;
+	}
+
+	// Change 3 more functions ...
+```
+
+	Further down in the draw function, before we draw the paddles, we also use 10 and should
+	change that to paddleHeight 
+
+```javascript
+	if (rightPaddle.y > height - paddleHeight) {
+		rightPaddle.y = height - paddleHeight;
+	}
+
+	// Change in both places !
+```
 
 
+	Then in those same places we move the paddle by 1, we should change that to a variable,
+	and then use that variable there.
+```javascript
+	let paddleStep = 10;
+
+	if (playerRightKey == "up") {
+		rightPaddle.y -= paddleStep;
+	}
+
+	// Change in 3 more places
+```
+
+	Lastly, in the draw() function, we need to change the lines that print out the score and
+	instructions, since we changed the scale.
+
+```javascript
+	context.font = '30px serif';
+	context.fillText(leftPlayerScore + " | " + rightPlayerScore, width / 2, 30, 140);
+	if (!gameStarted)
+		context.fillText("Press Space to start next level, R to restart", width / 2 - 180, 60, 400);
+
+	// ... later in the draw function
+
+	ballSpeed -= ballSpeed *.50;
+```
+
+	Ok, now for the sprites, instead of drawing big dots for everything.
+	The first thing you'll need is a folder to put any images. Your folder structure should look something like this after.
+```
+	pong
+	  |_ js
+	  |   |_ pong.js
+	  |
+	  |_ css
+	  |   |_ pong.css
+	  |
+	  |_ img
+	  |	  
+	  |_ _ _ pong.html
+```
+	
+	Download the image from the main branch, inside the img folder, called sprites.png, 
+	and put it in your img folder.
+
+
+	Now we need a place to store that image to work with it. In your html file, add a new canvas
+	like the one below anywhere in the body.
+
+```
+	<canvas style="display:none;" id="spritesCanvas"></canvas>
+```
+	Notice we're asking the browser to not show this new canvas.
+
+	Then, in the javascript file, we need to add variables to use the new canvas
+
+```javascript
+	const spritesCanvas = document.getElementById("spritesCanvas");
+	const spritesContext = spritesCanvas.getContext("2d");
+```
+
+	Somewhere before the call to gameOver(); at the bottom of your js file, you need to
+	add the following code. It handles loading the sprite sheet into the canvas that we just
+	created, so that we can use it later.
+
+```javascript
+	// This is a helper to load an image asyncronously
+	function loadImage(url) {
+		return new Promise(r => { let i = new Image(); i.onload = (() => r(i)); i.src = url; });
+	}
+
+	async function loadTiles() {
+		tilesImg = await loadImage("./img/sprites.png");
+		spritesContext.drawImage(tilesImg, 0, 0);
+	}
+
+	loadTiles();
+```
+
+	Lets create a variable that is a JSON object that describes the coordinates of the two
+	different sprites in the sprite sheet. for the drawing function to work we need to know
+	the x,y start and the x,y end of each sprite
+```javascript
+	let sprites = {"ball":{sx:0, sy:0, ex:9, ey:9}, "paddle":{sx:0, sy:10, ex:10, ey:110}};
+```
+	
+	If you look at the variable, it is an object with 2 objects inside (ball, paddle), that
+	each have 4 variables in them (sx, sy, ex, ey), that describe the coordinates of the 
+	sprite in that name.
+
+	Let's create a function to handle the drawing of the sprite for us that takes the name
+	of the sprite and the x and y position to draw it at.
+
+```javascript
+	function drawSprite(name, x, y) {
+		// get the sprite object named (name) and uses the coordinates inside it
+		// to place that sprite at x and y
+		let sprite = sprites[name];
+		let spriteWidth = (sprite.ex - sprite.sx) + 1;
+		let spriteHeight = (sprite.ey - sprite.sy) + 1;
+		// image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
+		context.drawImage(spritesCanvas, sprite.sx, sprite.sy, spriteWidth, spriteHeight, x, y, spriteWidth, spriteHeight);
+	}
+```
+
+	And, now inside the draw function, where we draw the ball and the paddles, we can change
+	to use this new function
+
+```javascript
+	drawSprite("ball", ball.x, ball.y);
+
+	drawSprite("paddle", leftPaddle.x, leftPaddle.y);
+
+	drawSprite("paddle", rightPaddle.x, rightPaddle.y);
+```
+
+	The only other changes I wanted to make are changes to the bounce of the ball off of
+	paddles, making it more random, and the beginning trajectory of the ball.
+	
+	The code to trigger when the ball hits left or hits right should look like this
+	(right before the code to draw the ball)
+```javascript
+	// ball hits the top/bottom
+	if (ball.y <= 0 || ball.y >= height)
+		ballVelocityY = -ballVelocityY;
+		
+	// ball hits left or right paddle
+	if (leftHit() || rightHit()) {
+		// reverse the x velocity
+		ballVelocityX = -ballVelocityX;
+		// change the y velocity depending on where the ball hit the paddle
+		let diff = ball.y - (leftHit() ? leftPaddle.y : rightPaddle.y);
+		let mod = scaleRange(diff, 0, paddleHeight, 0, 5);
+		ballVelocityY = ballVelocityY + mod;
+	}	
+```
+
+	Lets change the code to only release the ball in certain directions. I know the code is
+	a little bit confusing, but basically each side has a range of degrees that the ball should
+	stay within, and it just chooses at random. the gameOver() functon should look like this.
+
+```javascript
+
+function gameOver() {
+	// set the ball to the middle of the screen
+	ball = new Vec(width / 2, height / 2);
+	
+	// All of this ballDirection code is to keep the ball 
+	// from bouncing too up or down to start
+	let choice = Math.floor(Math.random() * Math.floor(2));
+	if (choice == 0) {
+		Math.floor(Math.random() * Math.floor(2)) == 0 ? 
+			ballDirection = (Math.random() * 36) :
+			ballDirection = (Math.random() * 361) + 325 ;	
+	}
+	else {
+		ballDirection = (Math.random() * 75) + 145;
+	}
+
+	// set the paddles to the middle on the edges
+	leftPaddle = new Vec(paddleEdgePadding, height / 2 - (paddleHeight / 2));
+	rightPaddle = new Vec(width - paddleWidth - paddleEdgePadding, height / 2 - (paddleHeight / 2));
+
+	// reset level and other values
+	playerLeftKey = false;
+	playerRightKey = false;
+
+	level += 1;
+	gameStarted = false;
+
+	// do one loop to redraw everything
+	requestAnimationFrame(loop);
+}
+```

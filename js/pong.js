@@ -249,7 +249,7 @@ function gameOver() {
 	ball = new Vec(width / 2, height / 2);
 
 	// All of this ballDirection code is to keep the ball 
-	// from bounding too up or down to start
+	// from bouncing too up or down to start
 	let choice = Math.floor(Math.random() * Math.floor(2));
 	if (choice == 0) {
 		Math.floor(Math.random() * Math.floor(2)) == 0 ? 
