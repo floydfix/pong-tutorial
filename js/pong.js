@@ -19,6 +19,7 @@ var Vec = function(x,y) {
 
 let paddleWidth = 10;
 let paddleHeight = 100;
+let paddleStep = 10;
 let paddleEdgePadding = 30;
 let ball;
 let leftPaddle;
@@ -106,10 +107,10 @@ function draw() {
 	// move the right paddle and keep it in bounds
 	if (playerRightKey != false) {
 		if (playerRightKey == "up") {
-			rightPaddle.y -= 10;
+			rightPaddle.y -= paddleStep;
 		}
 		if (playerRightKey == "down") {
-			rightPaddle.y += 10;
+			rightPaddle.y += paddleStep;
 		}
 		if (rightPaddle.y < 0) {
 			rightPaddle.y = 0;
@@ -122,10 +123,10 @@ function draw() {
 	// move the left paddle and keep it in bounds
 	if (playerLeftKey != false) {
 		if (playerLeftKey == "up") {
-			leftPaddle.y -= 10;
+			leftPaddle.y -= paddleStep;
 		}
 		if (playerLeftKey == "down") {
-			leftPaddle.y += 10;
+			leftPaddle.y += paddleStep;
 		}
 		if (leftPaddle.y < 0) { 
 			leftPaddle.y = 0;
